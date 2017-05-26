@@ -34,10 +34,10 @@
 - [leaflet](http://rstudio.github.io/leaflet/)
 - [leafletCN](https://mran.microsoft.com/web/packages/leafletCN/leafletCN.pdf)
 
-# Helpers
+### Helpers
 - [listviewer (htmlwidget for interactive views of R lists)](https://github.com/timelyportfolio/listviewer)
 
-## Other
+### Other
 - [jsonId (linking data)](https://github.com/ropensci/jsonld#readme)
 - [repijson (epidemiology data)](https://mran.microsoft.com/web/packages/repijson/repijson.pdf)
 - [rjstat (JSON-stat data)](https://github.com/ajschumacher/rjstat)
