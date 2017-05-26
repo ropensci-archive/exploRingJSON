@@ -5,6 +5,7 @@ library(listviewer)
 library(jsonlite)
 library(httr)
 library(dplyr)
+library(JSOmetaN)
 
 summary.doc <- function(jsondata){
   # number of documents
@@ -36,7 +37,7 @@ summary.doc <- function(jsondata){
 }
 
 ui <- dashboardPage(skin = "blue",
-  dashboardHeader(title = "JSON Explorer"),
+  dashboardHeader(title = "exploRing JSON"),
   dashboardSidebar(
     menuItem("Load JSON Data", tabName = "getdata", icon = icon("upload")),
     #fileInput('jsondata', 'Upload JSON fomatted file',
@@ -46,7 +47,8 @@ ui <- dashboardPage(skin = "blue",
     #textInput('jsonurl', "Or, paste URL of API query", value = "", width = NULL, placeholder = NULL),
     #submitButton(text = "Submit Query", icon = NULL, width = NULL),
     menuItem("listviewer", tabName = "listviewer", icon = icon("list-alt")),
-    menuItem("High-Level Summary", tabName = "level1", icon = icon("magic"))
+    #menuItem("High-Level Summary", tabName = "level1", icon = icon("magic")),
+    menuItem("Visualization", tabName = "plot", icon = icon("pie-chart"))
   ),
   dashboardBody(
     tabItems(
@@ -61,8 +63,10 @@ ui <- dashboardPage(skin = "blue",
       tabItem(tabName = "listviewer",
               jsoneditOutput( "jsed" )
       ),
-      tabItem(tabName = "level1",
-              tableOutput("table1"))
+      tabItem(tabName = "plot",
+              plotOutput("jsonviz"))
+      #tabItem(tabName = "level1",
+      #        tableOutput("text1"))
       )
   )
 )
@@ -72,7 +76,7 @@ server <- function(input, output, session) {
   filedata <- reactive({
     if (!is.null(input$jsondata)){
       infile <- input$jsondata
-      file <- read_json(infile$datapath)
+      file <- jsonlite::fromJSON(infile$datapath, simplifyDataFrame = T)
     } else if (!is.null(input$jsonurl)) {
       jsonurl <- input$jsonurl
       file <- content(GET(jsonurl))
@@ -93,8 +97,12 @@ server <- function(input, output, session) {
   }')
     )
   })
-  output$table1 <- renderDataTable({
-    fromJSON(filedata()) %>% summary.doc()  
+  # output$text1 <- renderText({
+  #   filedata() %>% fetch
+  # })
+  
+  output$jsonviz <- renderPlot({
+    filedata() %>% toJSON %>% as.character %>% plot_json_graph(show.labels = FALSE, vertex.size = 2)
   })
     
 
