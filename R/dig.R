@@ -9,6 +9,7 @@
 #' jsondata <- fromJSON("https://api.github.com/users/hadley/repos", flatten = FALSE)
 #' jsondata %>% dig("owner") %>% dig("type")
 #' jsondata %>% dig("owner", rs= T) 
+#' jsondata %>% dig("owner") %>% summary.doc()
 dig <- function(jsondata, keyname, rs = FALSE){
   if (!(keyname %in% names(jsondata))){
     stop("Error: Provided key name is not a key in the current level. Keep digging!")
