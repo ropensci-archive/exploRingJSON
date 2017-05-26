@@ -30,7 +30,7 @@ summary.doc <- function(jsondata){
 	
 	# add type of each key, total depth
 	tibble(Key = colnames(jsondata) , Doc.count = docs.per.key, 
-	       Class = docs.class, Obj.len = docs.size)
+	       Class = docs.class, Obj.len = docs.size, Is.terminal = docs.size == 1)
 
 	# vector to pass to summary.key
 	# invisible(jsondata)
