@@ -15,8 +15,14 @@ summary.doc <- function(jsondata){
 	# number of 1st degree keys
 	number.keys <- ncol(jsondata)
 	
-	# how
-	docs.per.key <- 
+	dummy_json <- matrix(1,nrow(jsondata),ncol(jsondata))
+	for (i in 1:nrow(jsondata)){
+		for (j in 1:ncol(jsondata)){
+			dummy_json[i,j] <- sum(is.na(jsondata[i,j]))/length(jsondata[i,j])	
+		}
+	}
+	
+	docs.per.key <- number.docs - colSums(dummy_json)
 	
 	tibble(Key = colnames(jsondata) , Doc.count = docs.per.key)
 
