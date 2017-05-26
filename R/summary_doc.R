@@ -21,7 +21,7 @@ summary.doc <- function(jsondata){
 	  docs.size[j] <- length(jsondata[,j]) # won't this give the length of each column = R?
 		# nested apply functions (ugh) below might also work
 		for (i in 1:R){
-			if (length(dummy_json[i,j])==1){dummy_json[i,j] <- is.na(x)}
+			if (length(jsondata[i,j])==1){dummy_json[i,j] <- is.na(jsondata[i,j])}
 		}
 	}
 	
