@@ -21,7 +21,7 @@ summary.doc <- function(jsondata){
 		# nested apply functions (ugh) below might also work
 		for (i in 1:R){
 			if (length(jsondata[i,j])==1){dummy.json[i,j] <- is.na(jsondata[i,j])}
-			all.docs.size <- length(jsondata[i,j])
+			all.docs.size[i,j] <- length(jsondata[i,j])
 		}
 	}
 	
