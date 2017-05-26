@@ -13,16 +13,15 @@ summary.doc <- function(jsondata){
   # number of 1st degree keys
   J <- ncol(jsondata)
 	
-	dummy_json <- matrix(NA,R,J)
+	dummy_json <- matrix(0,R,J)
 	docs.class <- rep(NA, J)
 	docs.size <- rep(NA, J)
 	for (j in 1:J){
 	  docs.class[j] <- class(jsondata[,j])
-	  docs.size[j] <- length(jsondata[,j])
+	  docs.size[j] <- length(jsondata[,j]) # won't this give the length of each column = R?
+		# nested apply functions (ugh) below might also work
 		for (i in 1:R){
-		  # maybe add dim to this? 
-		  # matrix -> something other than length below ?
-			dummy_json[i,j] <- sum(is.na(jsondata[i,j]))/length(jsondata[i,j])
+			if (length(dummy_json[i,j])==1){dummy_json[i,j] <- is.na(x)}
 		}
 	}
 	
