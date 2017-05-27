@@ -57,9 +57,10 @@ Need a package to help parse or explore the organization of keys within JSON tha
 -   [rjstat (JSON-stat data)](https://github.com/ajschumacher/rjstat)
 -   [rtson (typed JSON)](https://github.com/tercen/TSON)
 
-package JSOmetaN
+package `JSOmetaN`
 ================
 
+-   Available at [sctyner/JSOmetaN](https://github.com/sctyner/JSOmetaN)
 -   provides high level meta data for JSON
 -   useful if you're not sure what the object structure is
 -   uses two functions: fetch and dig
@@ -83,6 +84,9 @@ subsets the data by a specific keyname, dropping down a level in organization
 ------------------------------------------------------------------------
 
 ``` r
+devtools::install_github("sctyner/JSOmetaN")
+library(jsonlite)
+library(JSOmetaN)
 data1 <- fromJSON("https://api.github.com/users/hadley/repos")
 data1 %>% fetch() %>% dig("owner") %>% fetch()
 ```
