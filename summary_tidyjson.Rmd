@@ -1,0 +1,165 @@
+---
+title: "Summary of `tidyjson`"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## What is it?
+
+A package by [Jeremy Stanley](https://github.com/jeremystan) that provides "(a)n easy and consistent way to turn JSON into tidy data frames that are natural to work with in `dplyr`, `ggplot2` and other tools."
+
+## Main functions
+
+### Data Exploration
+
+- determine_types 
+- enter_object
+- read_json 
+- json_lengths 
+- json_types
+- [.tbl_json 
+
+### Data Manipulation
+
+- gather_array 
+- gather_keys 
+- my_unlist
+- replace_nulls 
+- spread_values
+- as.tbl_json 
+
+### Data Creation
+
+- tbl_json
+- append_values 
+- append_values_factory 
+- append_values_type
+
+### Other
+
+- allowed_json_types 
+- jfactory  
+- jfunctions  
+- list_path  
+- prep_path  
+- wrap_dplyr_verb  
+
+## Classes 
+
+- `tbl_json` 
+
+## Data Sets
+
+- `commits` - "Commit data for the dplyr repo from github API"
+- `companies ` - [1,000 Startup Companies' info](http://jsonstudio.com/resources/)
+- `issues` - "Issue data for the dplyr repo from github API"
+- `worldbank` - [Projects funded by the World Bank](http://jsonstudio.com/resources/)
+
+## Walk-through Example 1: US Zip Codes
+
+1. Read in data - `tidyjson` doesn't have a way to read newline delimited JSON data into R. Use `ndjson` instead.
+
+```{r readzip}
+zips <- ndjson::stream_in("data/zips.json")
+dplyr::glimpse(zips)
+```
+
+Okay, that was easy. Maybe too easy... Let's move on to another example.
+
+## Walk-through Example 2: World Bank
+
+1. Get data - The data are already a part of the package!
+
+```{r wbread}
+jsonbikes <- httr::GET("http://citibikenyc.com/stations/json")
+bikes <- rawToChar(jsonbikes$content)
+saveRDS(bikes, "bikes.json")
+read_json("bikes.json")
+```
+
+2. Explore the World Bank 
+
+- determine_types
+```{r wbconvert}
+```
+- enter_object
+- read_json 
+- json_lengths 
+- json_types
+- [.tbl_json 
+
+
+3. Start restructuring the character JSON data to a nice data frame structure.
+
+```{r echo=FALSE, eval=FALSE}
+#dump from another file
+# learning about tidyjson
+library(dplyr)
+purch_json <- '
+[
+  {
+  "name": "bob", 
+  "purchases": [
+  {
+  "date": "2014/09/13",
+  "items": [
+  {"name": "shoes", "price": 187},
+  {"name": "belt", "price": 35}
+  ]
+  }
+  ]
+  },
+  {
+  "name": "susan", 
+  "purchases": [
+  {
+  "date": "2014/10/01",
+  "items": [
+  {"name": "dress", "price": 58},
+  {"name": "bag", "price": 118}
+  ]
+  },
+  {
+  "date": "2015/01/03",
+  "items": [
+  {"name": "shoes", "price": 115}
+  ]
+  }
+  ]
+  }
+  ]'
+  
+  library(tidyjson)
+  
+  purch_items <- purch_json %>%
+    gather_array %>%                                     # stack the users 
+    spread_values(person = jstring("name")) %>%          # extract the user name
+    enter_object("purchases") %>% gather_array %>%       # stack the purchases
+    spread_values(purchase.date = jstring("date")) %>%   # extract the purchase date
+    enter_object("items") %>% gather_array %>%           # stack the items
+    spread_values(                                       # extract item name and price
+      item.name = jstring("name"),
+      item.price = jnumber("price")
+    ) %>%
+    select(person, purchase.date, item.name, item.price)
+  
+  (this.raw.content %>% 
+      gather_keys() %>% json_types())[2,] %>% 
+    gather_array() %>% gather_keys %>% 
+    spread_values(npi = jstring("npi")) %>% 
+    enter_object("practices")  %>% gather_keys
+  
+  (this.raw.content %>% 
+      gather_keys() %>% json_types())[2,] %>% 
+    gather_array() %>% 
+    spread_values(npi = jstring("npi")) %>% 
+    enter_object("practices") %>% gather_array %>%
+    spread_values(loc_slug = jstring("location_slug"),
+                  dist = jstring("distance"), 
+                  lat = jstring("lat"), lon = jstring("lon"), 
+                  phones = jstring("phones")
+    )
+```

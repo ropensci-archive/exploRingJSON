@@ -121,3 +121,32 @@ data1 %>% fetch() %>% dig("owner") %>% fetch()
     ## 15 received_events_url        30 character       1        TRUE
     ## 16                type        30 character       1        TRUE
     ## 17          site_admin        30   logical       1        TRUE
+
+Shiny App: exploRing JSON
+=========================
+
+-   App for exploring JSON array data
+-   Can upload a file in `.json` format
+-   Or, can provide a query to an API
+
+Functionality right now
+-----------------------
+
+1.  First, upload/query your JSON array data
+2.  Explore it with [`listviewer`](https://github.com/timelyportfolio/listviewer)
+3.  View the structure of the data as a node-link diagram [(code for plot taken from here)](https://github.com/jeremystan/tidyjson/blob/master/vignettes/visualizing-json.Rmd#visualizing-as-graphs)
+
+Appearance
+----------
+
+Uploading file
+
+![](appupload.png)
+
+Using `listviewer::jsonedit()`
+
+![](applistview.png)
+
+View data as node-link diagram
+
+![](appviz.png)
