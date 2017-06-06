@@ -1,10 +1,12 @@
 ## app.R ##
+source("plot_json_graph.R")
 library(shiny)
 library(shinydashboard)
 library(listviewer)
 library(jsonlite)
 library(httr)
 library(dplyr)
+library(tidyjson)
 library(JSOmetaN)
 
 ui <- dashboardPage(skin = "blue",
@@ -12,7 +14,7 @@ ui <- dashboardPage(skin = "blue",
   dashboardSidebar(
     menuItem("Load JSON Data", tabName = "getdata", icon = icon("upload")),
     #fileInput('jsondata', 'Upload JSON fomatted file',
-    #          accept=c('application/json', 
+    #          accept=c('application/json',
     #                   'application/javascript',
     #                   '.json')),
     #textInput('jsonurl', "Or, paste URL of API query", value = "", width = NULL, placeholder = NULL),
@@ -43,7 +45,7 @@ ui <- dashboardPage(skin = "blue",
 )
 
 server <- function(input, output, session) {
-  
+
   filedata <- reactive({
     if (!is.null(input$jsondata)){
       infile <- input$jsondata
@@ -52,14 +54,14 @@ server <- function(input, output, session) {
       jsonurl <- input$jsonurl
       file <- content(GET(jsonurl))
     }
-    
+
     if (is.null(file)) {
       # User has not uploaded a file yet
       return(NULL)
     }
     file
   })
-  
+
   output$jsed <- renderJsonedit({
     jsonedit(
       filedata(),
@@ -71,13 +73,13 @@ server <- function(input, output, session) {
   # output$text1 <- renderText({
   #   filedata() %>% fetch
   # })
-  
+
   output$jsonviz <- renderPlot({
     filedata() %>% toJSON %>% as.character %>% plot_json_graph(show.labels = FALSE, vertex.size = 2)
   })
-    
 
-  
+
+
 }
 
 shinyApp(ui, server)
